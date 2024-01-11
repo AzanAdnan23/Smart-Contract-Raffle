@@ -24,20 +24,35 @@
 pragma solidity ^0.8.20;
 
 /**
- * @title Raffle
- * @dev Raffle contract
+ * @title Raffle contract
+ * @author Azan Adnan
  * @notice This contract is used to create a raffle
  * @dev Implements Chainlink VRF
  */
 
 contract Raffle {
-    uint256 private immutable i_entranceFee;
+    error Raffle_NotEnoughEthSend();
 
-    constructor(uint256 entranceFee) {
+    /** State Variables */
+    uint256 private immutable i_entranceFee;
+    uint256 private immutable i_Interval;
+    address payable[] private s_players;
+
+    /** Events */
+    event EnterRaffle(address indexed _player);
+
+    constructor(uint256 entranceFee, uint256 interval) {
         i_entranceFee = entranceFee;
+        i_Interval = interval;
     }
 
-    function enterRaffle() public payable {}
+    function enterRaffle() external payable {
+        if (msg.value < i_entranceFee) {
+            revert Raffle_NotEnoughEthSend();
+        }
+        s_players.push(payable(msg.sender));
+        emit EnterRaffle(msg.sender);
+    }
 
     function pickWinner() public {}
 
