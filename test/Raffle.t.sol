@@ -2,9 +2,11 @@
 pragma solidity ^0.8.0;
 
 contract LotteryFoundry {
+
     address public owner;
     uint256 public ticketPrice;
     uint256 public totalTickets;
+
     uint256 public totalAmount;
     uint256 public winningTicket;
     bool public isLotteryOpen;
