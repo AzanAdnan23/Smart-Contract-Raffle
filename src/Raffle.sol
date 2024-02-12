@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
  * @title Raffle contract
  * @author Azan Adnan
  * @notice This contract is used to create a raffle
- * @dev Implements Chainlink VRF
+ * @dev Implements Chainlink VRF & Automation
  */
 
 import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
