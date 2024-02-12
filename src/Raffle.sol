@@ -60,7 +60,9 @@ contract Raffle is VRFConsumerBaseV2 {
         i_gasLane = gasLane;
         i_subscriptionId = subscriptionId;
         i_callbackGasLimit = callbackGasLimit;
+    
         s_raffleState = RaffleState.Open;
+    
     }
 
     function enterRaffle() external payable {
