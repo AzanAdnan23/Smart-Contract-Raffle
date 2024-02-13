@@ -3,9 +3,9 @@
 pragma solidity ^0.8.20;
 
 import {Raffle} from "../../src/Raffle.sol";
-import {Test} from "../../lib/forge-std/src/Test.sol";
 import {DeployRaffle} from "../../script/DeployRaffle.s.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
 
 contract RaffleTest is Test {
     //

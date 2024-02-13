@@ -7,36 +7,29 @@ import {Raffle} from "../src/Raffle.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 
 contract DeployRaffle is Script {
-    function run() external returns (Raffle) {
+    function run() external returns (Raffle, HelperConfig) {
         HelperConfig helperConfig = new HelperConfig();
-        {
-            uint256 entranceFee;
-            uint256 interval;
-            address vrfCoordinator;
-            bytes32 gasLane;
-            uint64 subscriptionId;
-            uint32 callbackGasLimit;
-            (
-                entranceFee,
-                interval,
-                vrfCoordinator,
-                gasLane,
-                subscriptionId,
-                callbackGasLimit
-            ) = helperConfig.activeNetworkConfig();
 
-            vm.startBroadcast();
+        (
+            uint256 entranceFee,
+            uint256 interval,
+            address vrfCoordinator,
+            bytes32 gasLane,
+            uint64 subscriptionId,
+            uint32 callbackGasLimit
+        ) = helperConfig.activeNetworkConfig();
 
-            Raffle raffle = new Raffle(
-                entranceFee,
-                interval,
-                vrfCoordinator,
-                gasLane,
-                subscriptionId,
-                callbackGasLimit
-            );
-            vm.stopBroadcast();
-            return raffle;
-        }
+        vm.startBroadcast();
+
+        Raffle raffle = new Raffle(
+            entranceFee,
+            interval,
+            vrfCoordinator,
+            gasLane,
+            subscriptionId,
+            callbackGasLimit
+        );
+        vm.stopBroadcast();
+        return (raffle, helperConfig);
     }
 }
