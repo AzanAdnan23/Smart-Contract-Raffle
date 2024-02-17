@@ -55,6 +55,7 @@ contract DeployRaffle is Script {
                 subscriptionId,
                 deployerKey
             );
+
             return (raffle, helperConfig);
         }
     }

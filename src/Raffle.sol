@@ -109,8 +109,7 @@ contract Raffle is VRFConsumerBaseV2 {
                 s_players.length,
                 uint256(s_raffleState)
             );
-        }
-        // Will revert if subscription is not set and funded.
+        } // Will revert if subscription is not set and funded.
         s_raffleState = RaffleState.Calculating;
         uint256 requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane,
