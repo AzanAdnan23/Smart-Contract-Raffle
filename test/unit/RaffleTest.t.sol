@@ -5,7 +5,11 @@ pragma solidity ^0.8.20;
 import {Raffle} from "../../src/Raffle.sol";
 import {DeployRaffle} from "../../script/DeployRaffle.s.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
+import {VRFCoordinatorV2Mock} from "../../lib/chainlink-brownie-contracts/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
+
 import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
+import {Vm} from "../../lib/forge-std/src/Vm.sol";
 
 contract RaffleTest is Test {
     Raffle raffle;
@@ -137,5 +141,54 @@ contract RaffleTest is Test {
         );
         raffle.performUpkeep("");
     }
-    //
+
+    modifier raffleEnteredAndTImePassed() {
+        vm.prank(Player);
+        raffle.enterRaffle{value: entranceFee}();
+
+        vm.warp(block.timestamp + interval + 1);
+        vm.roll(block.number + 1);
+        _;
+    }
+
+    function testPerformUpkeepUpdateRaffleStateAndEmitsRequestId()
+        public
+        raffleEnteredAndTImePassed
+    {
+        vm.recordLogs();
+        raffle.performUpkeep("");
+
+        Vm.Log[] memory entries = vm.getRecordedLogs();
+        bytes32 requestId = entries[1].topics[1];
+
+        Raffle.RaffleState rState = raffle.getRaffleState();
+
+        assert(uint256(requestId) > 0);
+        assert(uint256(rState) == 1);
+    }
+
+    function testFullfuillRandomWordsCanOnlyBeCalledAfterPerformUpkeep(
+        uint256 randomRequestId
+    ) public raffleEnteredAndTImePassed {
+        vm.expectRevert("nonexistent request");
+        VRFCoordinatorV2Mock(vrfCoordinator).fulfillRandomWords(
+            randomRequestId,
+            address(raffle)
+        );
+    }
+
+    function testFullfillRandomWordsPickAWinnerAndResetsAndSendsMoney()
+        public
+        raffleEnteredAndTImePassed
+    {
+        // Arrange
+
+        uint256 additionalEntries = 6;
+
+        for (uint256 i = 1; i < additionalEntries + 1; i++) {
+            address player = address(uint160(i));
+            hoax(player, 2 ether);
+            raffle.enterRaffle{value: entranceFee}();
+        }
+    }
 }
