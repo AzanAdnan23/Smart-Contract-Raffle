@@ -12,6 +12,4 @@
 
 1. Write some deploy script
 2. Write Test
-   1.Test on local chain 
-   2. Forked Testnet 
-   3. Forked Mainnet
+   1.Test on local chain 2. Forked Testnet 3. Forked Mainnet
